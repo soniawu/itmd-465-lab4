@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>ITMD-4/565 Lab 4 - Canvas Drawing</title>
+	<style type="text/css">
+		#content-wrapper {
+			width: 600px;
+			margin: 0 auto;
+			text-align: center;
+		}
+		#canvasRun {
+			background-color: #c00;
+			border: 0;
+			color: #fff;
+		}
+	</style>
+</head>
+<body>
+	<div id="content-wrapper">
+		<button id="canvasRun">Draw Canvas</button><br><br>
+		<canvas id="myCanvas" width="600" height="450"></canvas>
+	</div>
+	<script type="text/javascript">
+		// Canvas Drawing Code Here
+    var canvas = document.getElementById('myCanvas');
+    var myRed = '#c80000';
+    var myBlue = '#0000c8';
+    var myOrange = '#ffa500';
+    var myGreen = '00c800';
+    
+    var rotation = 0;
+
+    if (canvas.getContext) {
+      var ctx = canvas.getContext('2d');
+      ctx.save();
+    }
+    document.getElementById('canvasRun').addEventListener('click', drawCanvas, false);
+    
+    function drawCanvas() {
+      fillBackground();   // Fill linear gradient background
+      drawTitleText();    // Title on the top
+      drawCircle();       // Draw blue circle with white frame
+      drawArc();          // Draw and animate arc
+      drawSquare();       // Draw and animate red square with white frame
+      drawTriangle()      // Draw green triangle
+      drawCurveInRect();  // Draw quadratic curve on a white retangle
+      drawLogo();         // Fill in the IIT logo
+      drawMyName();       // Fill in my name and email
+      rotation += 1;      // Continue rotation
+      window.requestAnimationFrame(drawCanvas); // Animation frame
+    } // function drawCanvas()
+    
+    function drawMyName(){
+      ctx.font = '14px sans-serif';
+      ctx.fillStyle = 'white';
+      ctx.fillText('Sonia Wu',30,410);
+      ctx.fillText('swu52@hawks.iit.edu',30,430)
+    } // function drawMyName()
+    
+    function drawIITImg(img) {
+      // The callback function for the image load event
+      ctx.drawImage(img,300,375,250,60);
+    } //function drawIITImg()
+    
+    function drawLogo() {
+      var img = new Image();
+      img.src = 'IIT_SAT_stack_186_white.png';
+      // Use pre-defined function instead of anonymous function to avoid memory problem
+      img.addEventListener("load", drawIITImg(img),false);
+    } // function drawLogo() 
+    
+    function drawCurveInRect() {
+      // The position of the drawn object is calculated on paper
+      // and hard coded here. It ould be better to use calculation here.
+      // But in this lab work, I focus on how to use canvas property and method.
+      ctx.fillStyle = 'white';
+      ctx.fillRect(210,230,340,120);
+      ctx.beginPath();
+      ctx.moveTo(230,290);
+      ctx.quadraticCurveTo(305,240,380,290);
+      ctx.quadraticCurveTo(455,340,530,290);
+      ctx.strokeStyle = 'black';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([5,8]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.restore();
+    } // function drawCurveInRect()
+    
+    function drawTriangle() {
+      ctx.beginPath();
+      ctx.moveTo(100,240);
+      ctx.lineTo(169,360);
+      ctx.lineTo(31,360);
+      ctx.lineTo(100,240);
+      ctx.fillStyle  = 'green';
+      ctx.fill();
+      ctx.closePath();
+      ctx.restore();
+    } // function drawTriangle()
+    
+    function drawSquare() {
+      ctx.beginPath();
+      ctx.translate(500,150);                 // Set the center of square as the origin
+      ctx.rotate(rotation * (Math.PI / 180)); // Rotate 1 degree
+      ctx.fillStyle  = myRed;
+      ctx.fillRect(-50,-50,100,100);
+      ctx.lineWidth = 6;
+      ctx.strokeStyle = 'white';
+      ctx.strokeRect(-50,-50,100,100);
+      ctx.closePath();
+      ctx.resetTransform();    // Reset transform after rotate
+      ctx.restore();
+    } // drawSquare()
+    
+    function drawArc() {
+      ctx.beginPath();
+      ctx.translate(300,150);                 // Set the center of circle as the origin
+      ctx.rotate(rotation * (Math.PI / 180)); // Rotate 1 degree
+      ctx.arc(0,0,60,1.5*Math.PI,0.3*Math.PI,false);
+      ctx.lineWidth = 14;
+      ctx.strokeStyle = myOrange;
+      ctx.stroke();
+      ctx.resetTransform();   // Reset transform after rotate
+      ctx.restore();
+    } // drawArc()
+    
+    function drawCircle() {
+      ctx.beginPath();
+      ctx.arc(100,150,60,0,2*Math.PI,false);
+      ctx.fillStyle  = myBlue;
+      ctx.lineWidth = 4;
+      ctx.fill();
+      ctx.strokeStyle = 'white';
+      ctx.stroke();
+      ctx.closePath();
+      ctx.restore();
+    } // function drawCircle()
+    
+    function drawTitleText() {
+      // The text
+      ctx.font = '32px sans-serif';
+      ctx.textBaseline = 'bottom';
+      ctx.fillStyle = myRed;
+      ctx.fillText('ITMD-465 Canvas Lab',150,50);
+      // Draw the line under text
+      ctx.beginPath();
+      ctx.moveTo(20,60);
+      ctx.lineTo(580,60);
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = myRed;
+      ctx.stroke();
+      ctx.restore();
+    } // function drawTitleText()
+    
+    function fillBackground() {
+      // Fill linear gradient background
+      var bgfade = ctx.createLinearGradient(0,canvas.height,0,0);
+      bgfade.addColorStop(0,'black');
+      bgfade.addColorStop(1,'white');
+      ctx.fillStyle = bgfade;
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.restore();
+    } // function fillBackground()
+
+	</script>
+</body>
+</html>
